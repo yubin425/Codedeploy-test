@@ -31,7 +31,7 @@ jobs:
     - name: Deploy to EC2 with CodeDeploy
       run: |
         aws deploy create-deployment \
-          --application-name MyApplication \
+          --application-name codedeploy-weekly-nilla \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name MyDeploymentGroup \
+          --deployment-group-name codedeploy-weekly-nilla-group \
           --s3-location bucket=s3-weekly-nilla,key=deployment.zip,bundleType=zip
