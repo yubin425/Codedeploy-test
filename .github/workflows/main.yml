@@ -19,12 +19,19 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: 'ap-northeast-2'  
 
+    - name: Create deployment zip
+      run: |
+        # Create the deployment.zip containing appspec.yml and index.html
+        zip -r deployment.zip appspec.yml index.html
+
     - name: Sync to S3
       run: |
+        # Sync the project files to S3 (optional if needed)
         aws s3 sync . s3://s3-weekly-nilla --exclude ".git/*"  # S3에 배포할 파일을 업로드
 
     - name: Deploy to EC2 with CodeDeploy
       run: |
+        # Deploy using the created deployment.zip
         aws deploy create-deployment \
           --application-name MyApplication \
           --deployment-group-name MyDeploymentGroup \
