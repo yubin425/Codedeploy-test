@@ -21,19 +21,17 @@ jobs:
 
     - name: Create deployment zip
       run: |
-        # Create the deployment.zip containing appspec.yml and index.html
-        zip -r deployment.zip appspec.yml index.html
+        zip -qq -r ./deployment.zip .
+      shell: bash
 
-    - name: Sync to S3
+    - name: Upload deployment.zip to S3
       run: |
-        # Sync the project files to S3 (optional if needed)
-        aws s3 sync . s3://s3-weekly-nilla --exclude ".git/*"  # S3에 배포할 파일을 업로드
+        aws s3 cp ./deployment.zip s3://s3-weekly-nilla/deployment.zip
 
     - name: Deploy to EC2 with CodeDeploy
       run: |
-        # Deploy using the created deployment.zip (use fileb:// instead of file://)
         aws deploy create-deployment \
           --application-name MyApplication \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name MyDeploymentGroup \
-          --revision fileb://deployment.zip \
-          --deployment-config-name CodeDeployDefault.AllAtOnce
+          --s3-location bucket=s3-weekly-nilla,key=deployment.zip,bundleType=zip
