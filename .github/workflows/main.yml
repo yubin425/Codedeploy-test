@@ -31,9 +31,9 @@ jobs:
 
     - name: Deploy to EC2 with CodeDeploy
       run: |
-        # Deploy using the created deployment.zip
+        # Deploy using the created deployment.zip (use fileb:// instead of file://)
         aws deploy create-deployment \
           --application-name MyApplication \
           --deployment-group-name MyDeploymentGroup \
-          --revision file://deployment.zip \
+          --revision fileb://deployment.zip \
           --deployment-config-name CodeDeployDefault.AllAtOnce
